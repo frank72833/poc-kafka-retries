@@ -30,9 +30,7 @@ public class MessageServiceProvider {
                 .build();
 
         // send message with body
-        boolean res = messageBinders.messageOut().send(MessageBuilder.withPayload(message).build());
-
-        log.info("sendMessage sent! [res: "+ res + "] [message: " + message + "]");
+        messageBinders.messageOut().send(MessageBuilder.withPayload(message).build());
 
         return message;
     }

@@ -1,4 +1,3 @@
-
 ### KAFKA ###
 # max.poll.interval.ms=300000 (default)
 spring:
@@ -14,9 +13,9 @@ spring:
       bindings:
         message:
           consumer:
-            backOffInitialInterval: 10000
+            backOffInitialInterval: 1000
             backOffMaxInterval: 20000
-            maxAttempts: 3
+            maxAttempts: 10
           group: message-service
           contentyType: application/json
           destination: events.message
