@@ -1,0 +1,22 @@
+
+### KAFKA ###
+# max.poll.interval.ms=300000 (default)
+spring:
+  cloud:
+    stream:
+      kafka:
+        binder:
+          brokers: kafka:9092
+        bindings:
+          message:
+            consumer:
+              enableDlq: true
+      bindings:
+        message:
+          consumer:
+            backOffInitialInterval: 10000
+            backOffMaxInterval: 20000
+            maxAttempts: 3
+          group: message-service
+          contentyType: application/json
+          destination: events.message
