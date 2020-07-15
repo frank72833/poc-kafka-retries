@@ -10,14 +10,14 @@ import lombok.NoArgsConstructor;
 @Builder
 @Data
 public class Event<T> {
-    public enum EventName {
+    public enum EventType {
         INSERTED,
         STATUS_CHANGE,
         MODIFIED,
         REMOVED;
     }
 
-    private EventName eventName;
+    private EventType eventType;
     private String eventVersion = "1.0";
     private T item;
 }

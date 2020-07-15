@@ -2,6 +2,7 @@ package com.fsn.kafkaretries.message.serviceprovider;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fsn.kafkaretries.message.Message;
+import com.fsn.kafkaretries.message.support.kafka.MessageKafkaServiceProvider;
 import com.fsn.kafkaretries.message.support.kafka.binders.MessageBinders;
 import com.fsn.kafkaretries.support.kafka.Event;
 import com.fsn.kafkaretries.support.kafka.KafkaServiceProvider;
@@ -15,11 +16,11 @@ import java.util.UUID;
 @Service
 public class MessageServiceProvider {
 
-    private final KafkaServiceProvider<MessageBinders> kafkaServiceProvider;
+    private final MessageKafkaServiceProvider messageKafkaServiceProvider;
 
     @Autowired
-    public MessageServiceProvider(KafkaServiceProvider<MessageBinders> kafkaServiceProvider) {
-        this.kafkaServiceProvider = kafkaServiceProvider;
+    public MessageServiceProvider(MessageKafkaServiceProvider messageKafkaServiceProvider) {
+        this.messageKafkaServiceProvider = messageKafkaServiceProvider;
     }
 
     public Message sendMessage(JsonNode body) {
@@ -31,10 +32,14 @@ public class MessageServiceProvider {
                 .build();
 
         Event<Message> event = new Event<>();
-        event.setEventName(Event.EventName.INSERTED);
         event.setItem(message);
 
-        kafkaServiceProvider.sendMessage(event);
+        if (body.get("eventName") != null) {
+            Event.EventType eventName = Event.EventType.valueOf(body.get("eventName").asText());
+            event.setEventType(eventName);
+        }
+
+        messageKafkaServiceProvider.sendEvent(event);
 
         return message;
     }
